@@ -16,17 +16,18 @@ class ManualIndex:
 		index_text = res.read()[16:-3].decode("utf-8")
 		index_obj = json.loads(index_text)
 
+		yyg_docs = 'http://docs.yoyogames.com/'
 		index_list = ManualIndex()
 		for index_pair in index_obj:
 			if not isinstance(index_pair[1], list):
 				# Scalar value. Value contains single URL.
-				url = bytes('docs.yoyogames.com/' + index_pair[1], "utf-8")
-				index_list.insert(index_pair[0], urllib.parse.quote(url))
+				url = yyg_docs + urllib.parse.quote(index_pair[1])
+				index_list.insert(index_pair[0], url)
 			else:
 				# Value contains multiple URL possibilities.
 				for possible_pair in index_pair[1]:
-					url = bytes('docs.yoyogames.com/' + possible_pair[1], "utf-8")
-					index_list.insert(index_pair[0], urllib.parse.quote(url), possible_pair[0])
+					url = yyg_docs + urllib.parse.quote(possible_pair[1])
+					index_list.insert(index_pair[0], url, possible_pair[0])
 
 		return index_list
 	def find(self, keyword, index = 0):
